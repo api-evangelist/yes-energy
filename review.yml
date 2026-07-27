@@ -1,0 +1,281 @@
+aid: yes-energy
+name: Yes Energy
+review:
+  question: Does Yes Energy publish a public, self-serve developer API surface, and
+    what energy-data mandate (if any) applies to it?
+  answer: false
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  summary: |
+    Yes Energy operates a real, live REST API — DataSignals — but there is no
+    public developer surface of any kind. The API host answers anonymously with
+    HTTP 401 and Basic auth, the documentation knowledge base redirects to a
+    customer login, and no OpenAPI/Swagger document is served on any probed
+    path. No energy data mandate applies: Yes Energy is a commercial wholesale
+    market-data aggregator, not a utility, retailer, or metering agent, so Green
+    Button / ESPI and the Consumer Data Right are out of scope entirely.
+
+energyDataPosture:
+  homeMarket: United States
+  organizationType: >-
+    Private commercial energy market-data aggregator and reseller (power market
+    data, analytics, and bid-to-bill submission services). Not a utility, not a
+    retailer, not a distribution network operator, not a metering agent, and not
+    an ISO/RTO. Founded in Boulder, Colorado; listed as an Accel-KKR portfolio
+    company (https://www.accel-kkr.com/portfolio-company/yes-energy/, HTTP 200);
+    has acquired Live Power (2022), Power Settlements (2024), and RTO Insider
+    (2025) per its own newsroom.
+
+  mandateRegime: none
+  mandateStatus: not-applicable
+  mandateEvidence: |
+    Recorded as SEPARATE facts, as required:
+
+    OBLIGATION: None found. Yes Energy holds no consumer energy relationship and
+    is not a designated data holder under any regime.
+      - Green Button / ESPI (NAESB REQ.21 / NIST-derived) applies to utilities
+        and retailers that hold retail customer interval usage data. Yes Energy
+        holds none — its data is wholesale nodal market data sourced from ISOs
+        and RTOs. No Green Button, ESPI, Download My Data, or Connect My Data
+        reference appears anywhere on yesenergy.com (site crawl of the homepage,
+        /products, /products/datasignals, /datasignals-20, /solutions/*,
+        /support, /about, and the full sitemap.xml, all 2026-07-27).
+      - Australian CDR (energy) does not apply — Yes Energy is a US company with
+        no Australian retail operation and no CDR register presence.
+      - Ontario Green Button regulation does not apply — no Ontario LDC status.
+      - UK smart-meter / DCC infrastructure does not apply.
+
+    IMPLEMENTATION: Not applicable — there is no obligation to implement. No
+    conformance claim, compliance page, or standards badge was found, so there
+    is nothing to downgrade to "claimed-unverified" either. This is a genuine
+    `none` / `not-applicable`, not a mandate hiding behind an unverified claim.
+
+  dataStandard: >-
+    no standard reference found — the DataSignals API is a proprietary REST
+    shape under /PS/rest/. No Green Button/ESPI, no CDR Consumer Data Standards,
+    no IEC CIM 61968/61970, no IEEE 2030.5, no OpenADR, no OCPP/OCPI reference
+    was found on any public page. The only formal interchange surface publicly
+    evidenced is Snowflake Secure Data Sharing (a vendor mechanism, not an
+    energy data standard) via the Snowflake Marketplace provider profile.
+
+  consumerVsMarketSplit:
+    consumer_data_api: false
+    consumer_data_note: >-
+      Yes Energy holds no individual customer usage, billing, or metering data
+      and exposes no consent, authorization, or third-party data-sharing flow.
+      There is nothing here for a consumer or an accredited data recipient to
+      call. This is a structural absence, not a gap in disclosure.
+    market_data_open: false
+    market_data_note: >-
+      This is the finding for this organization. Yes Energy's entire product is
+      wholesale MARKET data — LMPs, FTR auction results, transmission and
+      generation outages, real-time generation and flow telemetry, constraints,
+      load, weather, fuels — but it publishes NONE of it openly. Every byte sits
+      behind a paid subscription. The underlying data is largely public at the
+      source (ERCOT, PJM, MISO, CAISO, SPP, ISO-NE, NYISO, and EIA all publish
+      it), so Yes Energy's business is the enrichment, normalization, latency,
+      and history layer on top of open government and ISO data — it consumes
+      open market data and re-sells it closed. Anonymous probes returned no
+      free, open, or sample data endpoint on any yesenergy.com host.
+
+  accessGate: customer-account-required
+  accessGateDetail: |
+    Exactly what a developer must do to get in, as observed on 2026-07-27:
+      1. There is no signup form, no free tier, no API key console, and no
+         sandbox published anywhere on yesenergy.com. /developers (404),
+         /api (404), and /docs (404) do not exist.
+      2. The only published entry paths are "Request a Demo"
+         (https://www.yesenergy.com/demo), support@yesenergy.com, and
+         +1 303-993-2773 — i.e. a sales conversation leading to a commercial
+         subscription contract.
+      3. Once a subscription exists, the customer is issued PowerSignals
+         account credentials, and those same HTTP Basic credentials authenticate
+         the DataSignals REST API.
+      4. Product documentation is itself gated: https://help.yesenergy.com/
+         (CNAME -> yesenergy.knowledgeowl.com) 301s to /help, then 302s to
+         https://services.yesenergy.com/PS/KnowledgeOwlAuthentication, then 302s
+         to https://services.yesenergy.com/PS/security/login, which terminates
+         in HTTP 401. A developer cannot read the endpoint reference before
+         becoming a paying customer.
+      5. A partial side door exists via Snowflake: the Yes Energy provider
+         profile on Snowflake Marketplace
+         (https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy,
+         HTTP 200) lists sample and trial datasets shared through Snowflake
+         Secure Data Sharing. That still requires a Snowflake account and, for
+         anything beyond sample/trial listings, a Yes Energy contract — and it
+         is data sharing, not an HTTP API.
+
+  authModel: |
+    HTTP Basic authentication, confirmed directly and anonymously:
+      $ curl -I https://services.yesenergy.com/PS/rest/
+      HTTP/2 401
+      www-authenticate: Basic realm="Realm"
+      server: Apache
+      strict-transport-security: max-age=16000000; includeSubDomains; preload;
+    No OAuth2, no OpenID Connect, no mTLS, and no accreditation scheme is
+    published. https://services.yesenergy.com/.well-known/openid-configuration
+    returned HTTP 404 — no OIDC discovery document is served. No API-key header
+    scheme is documented publicly. Credentials appear to be the customer's
+    PowerSignals account username/password, given that the same
+    services.yesenergy.com/PS security realm fronts both the web app and the
+    REST API.
+
+probes:
+  - url: https://www.yesenergy.com/
+    status: 200
+    note: Marketing site (HubSpot CMS). Product nav enumerates DataSignals,
+      PowerSignals, QuickSignals, Live Power, EnCompass, GridSite, Infrastructure
+      Insights, Demand Forecasts, PowerCore, Position Management, Submission
+      Services. No developer or API link anywhere in the navigation.
+  - url: https://yesenergy.com/
+    status: 200
+  - url: https://developer.yesenergy.com/
+    status: 000
+    note: DNS does not resolve (NXDOMAIN). No developer portal exists.
+  - url: https://docs.yesenergy.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://api.yesenergy.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://data.yesenergy.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://services.yesenergy.com/
+    status: 200
+    note: Real API/app host (141.148.23.59, Apache/Tomcat). Body is a JS redirect
+      to /PS/web/PowerSignals/ — the customer web application.
+  - url: https://services.yesenergy.com/PS/rest/
+    status: 401
+    note: CONFIRMED DataSignals REST API base path. Responds
+      'WWW-Authenticate:Basic realm="Realm"'. This is the single strongest piece
+      of evidence that the API is real and entirely gated.
+  - url: https://services.yesenergy.com/PS/rest/swagger.json
+    status: 401
+    note: Gated, not absent — cannot be distinguished from a nonexistent path
+      because the whole /PS/rest/ tree is Basic-auth protected. Nothing harvested.
+  - url: https://services.yesenergy.com/PS/rest/openapi.json
+    status: 401
+  - url: https://services.yesenergy.com/PS/v2/api-docs
+    status: 401
+  - url: https://services.yesenergy.com/api
+    status: 404
+  - url: https://services.yesenergy.com/docs
+    status: 404
+  - url: https://services.yesenergy.com/openapi.json
+    status: 404
+  - url: https://services.yesenergy.com/swagger.json
+    status: 404
+  - url: https://services.yesenergy.com/api-docs
+    status: 404
+  - url: https://services.yesenergy.com/.well-known/openid-configuration
+    status: 404
+    note: No OpenID Connect discovery document. Confirms no OIDC/OAuth2 surface.
+  - url: https://services.yesenergy.com/robots.txt
+    status: 404
+  - url: https://help.yesenergy.com/
+    status: 401
+    note: KnowledgeOwl-hosted customer knowledge base. Redirect chain
+      301 -> /help, 302 -> services.yesenergy.com/PS/KnowledgeOwlAuthentication,
+      302 -> services.yesenergy.com/PS/security/login, 401. The API reference is
+      inside this, unreachable without a paid account.
+  - url: https://yesenergy.knowledgeowl.com/
+    status: 401
+  - url: https://www.yesenergy.com/developers
+    status: 404
+  - url: https://www.yesenergy.com/api
+    status: 404
+  - url: https://www.yesenergy.com/docs
+    status: 404
+  - url: https://www.yesenergy.com/openapi.json
+    status: 404
+  - url: https://www.yesenergy.com/swagger.json
+    status: 404
+  - url: https://www.yesenergy.com/api-docs
+    status: 404
+  - url: https://www.yesenergy.com/.well-known/openid-configuration
+    status: 404
+  - url: https://www.yesenergy.com/.well-known/security.txt
+    status: 404
+  - url: https://www.yesenergy.com/robots.txt
+    status: 200
+  - url: https://www.yesenergy.com/sitemap.xml
+    status: 200
+    note: Full sitemap crawled for api/doc/developer/data paths — only marketing,
+      blog, news, and product pages. No developer area.
+  - url: https://www.yesenergy.com/products/datasignals
+    status: 200
+    note: Product page. Confirms "REST API" delivery, time-series and object
+      endpoints, Excel/Python/R integration, prebuilt code examples, throttle
+      limits. Publishes no base URL, no endpoint list, no auth detail.
+  - url: https://www.yesenergy.com/datasignals-20
+    status: 200
+    note: Confirms three delivery modes — DataSignals API (REST), DataSignals
+      Cloud (Snowflake), DataSignals Lake (bulk load to Databricks/Redshift/etc,
+      refreshed every 30 minutes).
+  - url: https://www.yesenergy.com/solutions/it-data-scientist
+    status: 200
+    note: No documentation links; routes to phone/email/demo.
+  - url: https://www.yesenergy.com/support
+    status: 200
+    note: Human support only — phone, email, hours. No knowledge base link, no
+      developer resources, no status page link.
+  - url: https://www.yesenergy.com/packages
+    status: 200
+    note: Market data packages page. No public price list of API tiers harvested.
+  - url: https://status.yesenergy.com/
+    status: 200
+    note: Instatus-hosted status page (CNAME cname.instatus.com).
+  - url: https://www.yesenergy.com/blog/rss.xml
+    status: 200
+    note: HubSpot blog RSS feed — usable for the blog pull pipeline.
+  - url: https://www.yesenergy.com/partners/snowflake
+    status: 200
+    note: Source of the Snowflake Marketplace listing URLs below.
+  - url: https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy
+    status: 200
+    note: Public Snowflake Marketplace provider profile. Listings include Yes
+      Energy Full Dataset (GZSOZ71OEG), Live Power 5-Minute Generation and
+      Transmission Data (GZSOZ71OHB), FTR Position P&L and Risk Data (GZSOZ71OHF),
+      Infrastructure Insights (GZSOZ1GJEJ4W), Sample Data (GZSOZ71OJH), and Basic
+      Trial Data (GZSOZ71OJL). Secure Data Sharing, not an HTTP API.
+  - url: https://api.github.com/orgs/yesenergy
+    status: 404
+    note: No official GitHub organization. GitHub repo search for "yesenergy"
+      returned 4 unaffiliated personal repositories, none an official SDK.
+  - url: https://pypi.org/pypi/yesenergy/json
+    status: 404
+    note: No official Python SDK published under that name.
+
+artifacts:
+  openapiHarvested: false
+  specsCount: 0
+  reason: >-
+    No machine-readable specification is reachable. Every candidate spec path is
+    either 404 on the public hosts or 401 behind the /PS/ Basic-auth realm, and
+    the API reference lives inside a login-gated KnowledgeOwl knowledge base.
+    Nothing was written to openapi/ because nothing real was retrieved — no spec
+    was reconstructed, inferred, or invented.
+
+sources:
+  - url: https://www.yesenergy.com/products/datasignals
+    type: Documentation
+    note: DataSignals product page — confirms a REST API exists.
+  - url: https://www.yesenergy.com/datasignals-20
+    type: Documentation
+    note: API vs Cloud vs Lake delivery modes, volumes, and history depth.
+  - url: https://services.yesenergy.com/PS/rest/
+    type: APIBase
+    note: Live base path; HTTP 401 with Basic realm. Auth model evidence.
+  - url: https://help.yesenergy.com/
+    type: Documentation
+    note: Customer knowledge base; redirect chain to customer login, 401.
+  - url: https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy
+    type: DataMarketplace
+    note: Public marketplace profile; Snowflake Secure Data Sharing listings.
+  - url: https://www.accel-kkr.com/portfolio-company/yes-energy/
+    type: Ownership
+    note: Private-equity owner listing.
+  - url: https://www.yesenergy.com/news/yes-energy-acquires-rto-insider
+    type: News
+    note: 2025 RTO Insider acquisition.
