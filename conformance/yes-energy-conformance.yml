@@ -1,0 +1,97 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from live probes (TLS/HSTS/DNS, the /PS/rest/ 401 challenge, the
+  /.well-known/ 404 sweep) and a full crawl of the public yesenergy.com surface
+  for standards or compliance claims. No compliance, certification, or trust
+  page exists on any public host, so nothing here is a provider claim — every
+  entry is an observation.
+standards:
+- id: http-basic-auth
+  conforms: true
+  evidence: >-
+    RFC 7617 Basic challenge returned by
+    https://services.yesenergy.com/PS/rest/ — `WWW-Authenticate: Basic
+    realm="Realm"`
+- id: tls-1.3
+  conforms: true
+  evidence: >-
+    TLS 1.3 negotiated on both www.yesenergy.com and services.yesenergy.com
+    (security/yes-energy-domain-security.yml)
+- id: hsts
+  conforms: true
+  evidence: >-
+    services.yesenergy.com sends max-age=16000000 includeSubDomains preload;
+    www.yesenergy.com sends max-age=31536000
+- id: spf
+  conforms: true
+  evidence: SPF record present on yesenergy.com
+- id: dmarc
+  conforms: true
+  evidence: DMARC present with policy p=reject on yesenergy.com
+- id: dnssec
+  conforms: false
+  evidence: no DNSSEC on yesenergy.com
+- id: caa
+  conforms: false
+  evidence: no CAA records on yesenergy.com
+- id: oauth2
+  conforms: false
+  evidence: >-
+    no oauth2 surface; /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource both 404
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 on both hosts
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on every host probed
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns 404 on every host probed
+- id: openapi
+  conforms: false
+  evidence: >-
+    no machine-readable specification is served; every candidate path is 404 on
+    the public hosts or 401/302 behind the /PS/ Basic-auth realm
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: not observable — no application response is reachable anonymously
+- id: green-button-espi
+  conforms: false
+  evidence: >-
+    out of scope — Yes Energy holds no retail customer interval usage data; no
+    Green Button / ESPI / NAESB REQ.21 reference on any public page
+- id: cdr-consumer-data-standards
+  conforms: false
+  evidence: >-
+    out of scope — US company, no Australian retail operation, no CDR register
+    presence
+- id: iec-cim-61968-61970
+  conforms: false
+  evidence: no CIM reference found on any public page
+- id: ieee-2030.5
+  conforms: false
+  evidence: no IEEE 2030.5 reference found on any public page
+- id: openadr
+  conforms: false
+  evidence: no OpenADR reference found on any public page
+- id: ocpp-ocpi
+  conforms: false
+  evidence: no OCPP/OCPI reference found — Yes Energy is not an EV charging actor
+compliance_program:
+  published: false
+  certifications: []
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP, or CSA STAR claim appears on
+    any public Yes Energy page; /security, /trust, /compliance, trust.yesenergy.com
+    and security.yesenergy.com all fail to resolve or return 404
+    (probe-security-programs.py, 2026-07-27, vdp=none trust=none). No Compliance
+    or TrustCenter pointer is emitted because no published program exists.
+interchange_surfaces:
+- id: snowflake-secure-data-sharing
+  conforms: true
+  evidence: >-
+    public provider profile at
+    https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy —
+    a vendor data-sharing mechanism, not an energy data standard

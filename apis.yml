@@ -79,6 +79,20 @@ apis:
   - type: Authentication
     url: https://services.yesenergy.com/PS/rest/
 common:
+- type: DomainSecurity
+  url: security/yes-energy-domain-security.yml
+- type: Authentication
+  url: authentication/yes-energy-authentication.yml
+- type: Conventions
+  url: conventions/yes-energy-conventions.yml
+- type: Lifecycle
+  url: lifecycle/yes-energy-lifecycle.yml
+- type: Conformance
+  url: conformance/yes-energy-conformance.yml
+- type: Packages
+  url: packages/yes-energy-packages.yml
+- type: LLMsTxt
+  url: llms/yes-energy-llms.txt
 - type: Website
   url: https://www.yesenergy.com/
 - type: Products
@@ -103,8 +117,12 @@ common:
   url: https://www.yesenergy.com/news
 - type: About
   url: https://www.yesenergy.com/about
+- type: PrivacyPolicy
+  url: https://www.yesenergy.com/privacy-policy
 - type: LinkedIn
   url: https://www.linkedin.com/company/yes-energy/
+- type: YouTube
+  url: https://www.youtube.com/@yes-energy
 - type: Partners
   url: https://www.yesenergy.com/partners/snowflake
 - type: DataMarketplace

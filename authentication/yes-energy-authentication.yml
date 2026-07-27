@@ -1,0 +1,60 @@
+generated: '2026-07-27'
+method: probed
+source: >-
+  Live anonymous probe of https://services.yesenergy.com/PS/rest/ (HTTP 401 with
+  a WWW-Authenticate challenge), plus /.well-known/ discovery probes on the same
+  host. No OpenAPI security schemes exist to derive from — Yes Energy publishes
+  no machine-readable specification.
+summary:
+  types:
+  - http
+  api_key_in: []
+  oauth2_flows: []
+  notes: >-
+    Single auth mechanism. HTTP Basic over TLS 1.3, credentials issued only to
+    contracted subscribers. No API-key header scheme, no OAuth 2.0, no OpenID
+    Connect, and no mutual TLS is published or discoverable.
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  realm: Realm
+  in: header
+  parameter: Authorization
+  transport: https
+  evidence: >-
+    curl -I https://services.yesenergy.com/PS/rest/ -> HTTP/2 401 with
+    `www-authenticate: Basic realm="Realm"` (probed 2026-07-27); the same
+    services.yesenergy.com/PS security realm fronts the PowerSignals web
+    application login at /PS/security/login.
+  credential_issuance: >-
+    Commercial subscription only. There is no self-serve signup, no free tier,
+    no API-key console, and no sandbox. The published entry paths are the demo
+    request form (https://www.yesenergy.com/demo), support@yesenergy.com, and
+    +1 303-993-2773. Credentials appear to be the customer's PowerSignals
+    account username/password.
+negative_findings:
+- check: OpenID Connect discovery
+  result: not served
+  evidence: https://services.yesenergy.com/.well-known/openid-configuration -> 404
+- check: OAuth 2.0 authorization server metadata (RFC 8414)
+  result: not served
+  evidence: https://services.yesenergy.com/.well-known/oauth-authorization-server -> 404
+- check: OAuth 2.0 protected resource metadata (RFC 9728)
+  result: not served
+  evidence: https://services.yesenergy.com/.well-known/oauth-protected-resource -> 404
+- check: Public authentication documentation
+  result: gated
+  evidence: >-
+    https://help.yesenergy.com/ 301 -> /help, 302 ->
+    services.yesenergy.com/PS/KnowledgeOwlAuthentication, 302 ->
+    /PS/security/login, terminating in HTTP 401. The auth reference is inside a
+    login-gated KnowledgeOwl knowledge base.
+scopes: []
+scopes_note: >-
+  Not applicable. HTTP Basic has no scope surface; entitlement is enforced by
+  the subscription package attached to the account, not by a token scope.
+related:
+- security/yes-energy-domain-security.yml
+- conventions/yes-energy-conventions.yml
+- well-known/yes-energy-well-known.yml

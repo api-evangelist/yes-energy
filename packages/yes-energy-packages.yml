@@ -1,0 +1,61 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  Registry searches (npm, PyPI, RubyGems) plus GitHub repository search and the
+  public Yes Energy product pages. Recorded negative result — no first-party
+  client library exists.
+packages: []
+official_sdk_count: 0
+summary: >-
+  Yes Energy ships no official SDK or client library in any public package
+  registry, and operates no GitHub organization. The DataSignals product pages
+  say the API is used "across all of your tools including data science
+  applications like R and Python" and that Yes Energy supplies "prebuilt code
+  and endpoint examples" — but those examples live inside the login-gated
+  KnowledgeOwl knowledge base (help.yesenergy.com), not in any public registry
+  or repository. No SDKs pointer is wired in apis.yml because there is no SDK.
+registries_probed:
+- registry: npm
+  query: yesenergy
+  url: https://registry.npmjs.org/-/v1/search?text=yesenergy
+  results: 0
+- registry: npm
+  query: datasignals
+  url: https://registry.npmjs.org/-/v1/search?text=datasignals
+  results: 1
+  note: >-
+    the single hit ("data-signals", a generic JS state-management library) is
+    unrelated to Yes Energy
+- registry: pypi
+  query: yes-energy / yesenergy / yesenergy-api / datasignals
+  results: 0
+  note: all direct package lookups returned HTTP 404
+- registry: rubygems
+  query: yesenergy
+  url: https://rubygems.org/api/v1/search.json?query=yesenergy
+  results: 0
+- registry: github
+  query: yesenergy
+  url: https://api.github.com/orgs/yesenergy
+  results: 0
+  note: >-
+    HTTP 404 — no official GitHub organization. Repository search returns only
+    unaffiliated personal projects (customer integrations, a former employee's
+    permitted code samples), none of which is a first-party SDK.
+third_party_integrations_observed:
+- repo: https://github.com/pcwa-smotley/Oxbow_Django_Optimization
+  language: python
+  official: false
+  note: customer-side DataSignals time-series client (requests + HTTPBasicAuth)
+- repo: https://github.com/saifkhan39/python-helloworld
+  language: python
+  official: false
+  note: customer-side DataSignals CSV pulls
+- repo: https://github.com/gridstor/gst-homepage
+  language: typescript
+  official: false
+  note: customer-side DataSignals TB2/TB4 client
+third_party_note: >-
+  Listed as evidence that a real consumer surface exists, NOT as SDKs. None is
+  published to a registry, none is maintained by Yes Energy, and none is
+  endorsed.

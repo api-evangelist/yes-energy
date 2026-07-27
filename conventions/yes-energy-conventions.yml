@@ -1,0 +1,154 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from live anonymous probes of https://services.yesenergy.com/PS/rest/
+  plus corroborated public third-party integration code. Yes Energy publishes no
+  public API reference (help.yesenergy.com is login-gated) and no
+  machine-readable specification, so the provider-published half of this
+  document is thin by necessity. Nothing here is invented; every claim carries
+  an evidence pointer.
+api: Yes Energy DataSignals API
+base_url: https://services.yesenergy.com/PS/rest/
+
+authentication:
+  style: http-basic
+  header: 'Authorization: Basic <base64(username:password)>'
+  transport: TLS 1.3 (HSTS max-age=16000000, includeSubDomains, preload)
+  challenge: 'WWW-Authenticate: Basic realm="Realm"'
+  detail: authentication/yes-energy-authentication.yml
+  evidence: anonymous HTTP HEAD of the REST base path, 2026-07-27, HTTP 401
+
+content_negotiation:
+  style: extension-suffix
+  note: >-
+    Response format is selected by a file extension on the resource path rather
+    than by an Accept header — the same resource is addressed as `.json`,
+    `.csv`, or `.html`. Observed in three independent public integrations (see
+    observed_unofficial.evidence); not confirmable against provider docs, which
+    are gated.
+  formats_observed: [json, csv, html]
+
+pagination:
+  style: unknown
+  note: >-
+    Not publicly documented and not observable anonymously. Third-party client
+    code bounds result size with the `startdate`/`enddate` window and the
+    `items` list rather than with any page/cursor parameter; no pagination
+    parameter, Link header, or next-token field appears in any public evidence.
+
+idempotency:
+  supported: unknown
+  note: >-
+    No idempotency key, header, or replay contract is documented publicly. The
+    observed surface is read-only time-series retrieval over GET, which is
+    naturally idempotent, but Yes Energy publishes no idempotency contract for
+    the write-bearing products (Submission Services, Position Management), so no
+    Idempotency claim is made here.
+
+versioning:
+  scheme: unknown
+  note: >-
+    No version segment appears in the base path (`/PS/rest/`), no version header
+    is advertised in the 401 response, and no public versioning policy exists.
+    "DataSignals 2.0" on the marketing site (https://www.yesenergy.com/datasignals-20)
+    is a product-line name covering API / Cloud / Lake delivery modes, not an
+    API version identifier.
+
+error_envelope:
+  format: unknown
+  note: >-
+    Not observable anonymously — every path under /PS/rest/ answers 401 before
+    any application error can be produced. See errors/ (absent: nothing real to
+    catalog).
+  observed_status_codes:
+  - status: 401
+    meaning: Missing or invalid HTTP Basic credentials (anonymous default)
+    evidence: https://services.yesenergy.com/PS/rest/ probed 2026-07-27
+  - status: 302
+    meaning: >-
+      Non-/rest/ paths under /PS/ redirect to /PS/security/login rather than
+      returning 401
+    evidence: https://services.yesenergy.com/PS/swagger.json -> 302 -> /PS/security/login
+
+rate_limiting:
+  signaling: unknown
+  note: >-
+    The DataSignals product page states throttle limits apply but publishes no
+    numbers, and no RateLimit/X-RateLimit header is observable anonymously. No
+    rate-limits artifact is emitted because no real limit value exists to
+    record. Public third-party integrations self-throttle defensively (one
+    observed client enforces a 6-second minimum inter-request interval), which
+    is a consumer-side choice, not a published provider limit.
+
+request_tracing:
+  request_id_header: unknown
+  note: No correlation/request-id header is advertised in any anonymous response.
+
+observed_unofficial:
+  disclaimer: >-
+    UNOFFICIAL. The following request shape is not published by Yes Energy. It
+    is recorded because it appears consistently across independent public
+    third-party integrations against the live host, which makes it real
+    observed usage rather than an inference. It is NOT a specification, it is
+    not authoritative, and no OpenAPI has been reconstructed from it.
+  confidence: medium
+  resource:
+    path: /PS/rest/timeseries/multiple.{json|csv|html}
+    method: GET
+    purpose: Retrieve one or more market data time series in a single call.
+  parameters:
+  - name: items
+    style: query
+    format: 'comma-separated list of DATATYPE:OBJECTID pairs (e.g. DALMP:20000002064)'
+    note: >-
+      DATATYPE names observed include DALMP, RTLMP, LMP_15MIN, GASPRICE,
+      DA_PEAK2TROUGH2, DA_PEAK2TROUGH4. OBJECTID is a Yes Energy numeric object
+      identifier for a node, hub, or series.
+  - name: startdate
+    style: query
+    format: YYYY-MM-DD
+  - name: enddate
+    style: query
+    format: YYYY-MM-DD
+  - name: agglevel
+    style: query
+    format: 'aggregation level (values observed: 5min, hour)'
+  - name: datecollections
+    style: query
+    format: >-
+      numeric identifier of a named relative date collection, used instead of an
+      explicit start/end window
+  response_note: >-
+    The CSV projection carries a DATETIME column plus one column per requested
+    item; the HTML projection returns a table. Response schemas are not
+    published.
+  evidence:
+  - url: https://github.com/pcwa-smotley/Oxbow_Django_Optimization/blob/32d64ef9a372e722137403c8b9ff55dc22a9fe32/abay_opt/yes_energy_grab.py
+    shows: timeseries/multiple.json with agglevel, datecollections, items; HTTPBasicAuth
+  - url: https://github.com/saifkhan39/python-helloworld/blob/a917672ebe8a51e97d5dc6f86b56b496cfcbd24b/scripts/proxy_day_gas_sql.py
+    shows: timeseries/multiple.csv with agglevel, startdate, enddate, items; HTTP Basic
+  - url: https://github.com/gridstor/gst-homepage/blob/2150decaef5e8696ba15f5cd2f9ea65a9f480c59/src/lib/services/yes-energy.ts
+    shows: timeseries/multiple.html with startdate, enddate, items; Basic auth header construction
+  not_evidence_of:
+  - >-
+    The full endpoint surface. Yes Energy documents object endpoints and many
+    other data families in its gated knowledge base; only the time-series
+    retrieval path is visible in public third-party code.
+
+alternate_delivery:
+- name: DataSignals Cloud
+  mechanism: Snowflake Secure Data Sharing
+  url: https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy
+  note: >-
+    Data sharing, not an HTTP API. Sample and Basic Trial listings exist on the
+    Snowflake Marketplace; anything beyond them requires a Yes Energy contract.
+- name: DataSignals Lake
+  mechanism: bulk load into a customer warehouse (Databricks, Redshift, and similar)
+  url: https://www.yesenergy.com/datasignals-20
+  note: Refreshed on a published cadence of every 30 minutes.
+
+related:
+- authentication/yes-energy-authentication.yml
+- conformance/yes-energy-conformance.yml
+- lifecycle/yes-energy-lifecycle.yml
+- security/yes-energy-domain-security.yml

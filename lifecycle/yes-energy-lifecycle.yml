@@ -1,0 +1,73 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://status.yesenergy.com/ (+ its summary.json), the DataSignals product
+  pages, and probes for versioning / deprecation / release-notes pages on
+  www.yesenergy.com. No OpenAPI exists, so no deprecated operations could be
+  derived.
+api: Yes Energy DataSignals API
+
+versioning:
+  scheme: none-published
+  current: null
+  docs: null
+  note: >-
+    No version segment in the base path (https://services.yesenergy.com/PS/rest/),
+    no version header advertised, and no public versioning policy. "DataSignals
+    2.0" (https://www.yesenergy.com/datasignals-20) names the product line's
+    three delivery modes — API, Cloud, Lake — not an API version.
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: unknown
+  note: >-
+    No deprecation or sunset policy is published on any public page. Probes for
+    /changelog, /release-notes, /whats-new, /product-updates, and /roadmap on
+    www.yesenergy.com all returned 404 (2026-07-27). Any deprecation notice
+    presumably reaches customers through the login-gated knowledge base or
+    account management; none is publicly verifiable.
+
+sla:
+  url: null
+  uptime_target: null
+  published_claims:
+  - claim: >-
+      "DataSignals as a service is available 24x7 and is automated to update
+      continuously with new and/or updated data from hundreds of collectors and
+      backup collectors."
+    source: https://www.yesenergy.com/products/datasignals
+  - claim: >-
+      "Real-time feeds update continuously. In most cases, updates are available
+      within seconds to minutes of market release."
+    source: https://www.yesenergy.com/products/datasignals
+  note: >-
+    Marketing availability language only. No contractual uptime percentage,
+    credit schedule, or SLA document is published publicly.
+
+status_page:
+  url: https://status.yesenergy.com/
+  provider: Instatus
+  machine_readable: https://status.yesenergy.com/summary.json
+  status_at_probe: UP
+  probed: '2026-07-27'
+  note: >-
+    Publicly reachable and machine-readable. summary.json returns page status
+    plus activeMaintenances[] with scheduled windows (a "Customer Server
+    Patching" window was listed at probe time), so status is consumable by
+    automation without a customer account — the only unauthenticated
+    machine-readable surface Yes Energy operates.
+
+changelog:
+  url: null
+  note: >-
+    No dated changelog or release-notes page exists publicly. Product change
+    announcements appear as blog posts (e.g. "Calculated Data Types Now
+    Available in DataSignals Cloud" at https://www.yesenergy.com/blog), which is
+    a marketing channel rather than a structured changelog, so no changelog
+    artifact is emitted.
+
+deprecated_operations: []
+deprecated_operations_note: >-
+  Not derivable — Yes Energy publishes no OpenAPI, so there is no spec in which
+  a deprecated flag could be read.

@@ -1,0 +1,55 @@
+# Yes Energy
+
+> Yes Energy is a Boulder, Colorado power market data company serving the North American wholesale electricity markets — the seven ISOs and RTOs (ERCOT, PJM, MISO, CAISO, SPP, ISO-NE, NYISO) plus Canadian and Western markets. It aggregates, cleans, and enriches nodal locational marginal prices, FTR auction results, transmission and generation outages, real-time generation and flow telemetry, constraints, load, weather, and fuels data, and sells it through DataSignals (a REST API), DataSignals Cloud (Snowflake Secure Data Sharing), DataSignals Lake (bulk warehouse load), and the PowerSignals, QuickSignals, EnCompass, Live Power, Infrastructure Insights, Position Management, and Submission Services products.
+
+## Access posture (read this first)
+
+- The DataSignals REST API is real and live at `https://services.yesenergy.com/PS/rest/`, but it is entirely closed. Anonymous requests return HTTP 401 with `WWW-Authenticate: Basic realm="Realm"`.
+- Authentication is HTTP Basic only. No OAuth 2.0, no OpenID Connect, no API-key console, no mutual TLS. `/.well-known/openid-configuration`, `/.well-known/oauth-authorization-server`, and `/.well-known/security.txt` all return 404.
+- There is no public developer portal, no self-serve signup, no free tier, and no sandbox. `developer.yesenergy.com`, `docs.yesenergy.com`, and `api.yesenergy.com` do not resolve.
+- The API reference is inside a login-gated KnowledgeOwl knowledge base: `https://help.yesenergy.com/` redirects to `https://services.yesenergy.com/PS/security/login` and terminates in HTTP 401.
+- No machine-readable specification (OpenAPI, Swagger, GraphQL SDL, AsyncAPI) is published or reachable.
+- Getting access means a commercial conversation: request a demo, email support@yesenergy.com, or call +1 303-993-2773. Credentials are then issued as the customer's PowerSignals account username/password.
+
+## APIs
+
+- [Yes Energy DataSignals API](https://www.yesenergy.com/products/datasignals): REST API for automated access to North American wholesale power market data — nodal prices, transmission, generation, outages, constraints, weather, and fuels, real-time plus 15+ years of history. Base URL `https://services.yesenergy.com/PS/rest/`. HTTP Basic auth, subscriber credentials only.
+
+## Products
+
+- [Products overview](https://www.yesenergy.com/products): DataSignals, PowerSignals, QuickSignals, Live Power, EnCompass, GridSite, Infrastructure Insights, Demand Forecasts, PowerCore, Position Management, Submission Services.
+- [DataSignals 2.0 delivery modes](https://www.yesenergy.com/datasignals-20): DataSignals API (REST), DataSignals Cloud (Snowflake Secure Data Sharing), DataSignals Lake (bulk load into a customer warehouse, refreshed every 30 minutes).
+- [Snowflake Marketplace provider profile](https://app.snowflake.com/marketplace/providers/GZSOZ71OEK/Yes%20Energy): the only partially open side door — Sample Data and Basic Trial Data listings shared through Snowflake Secure Data Sharing. Data sharing, not an HTTP API, and still requires a Snowflake account.
+
+## Artifacts in this profile
+
+- [Authentication profile](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/authentication/yes-energy-authentication.yml): HTTP Basic scheme, credential issuance path, and the OAuth/OIDC negative findings.
+- [API conventions](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/conventions/yes-energy-conventions.yml): auth style, extension-suffix content negotiation, and the unofficial request shape observed in public third-party integrations.
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/lifecycle/yes-energy-lifecycle.yml): status page, availability claims, and the absence of any versioning, deprecation, or changelog policy.
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/conformance/yes-energy-conformance.yml): standards observed and standards absent, including the energy-sector regimes (Green Button/ESPI, CDR, IEC CIM, IEEE 2030.5, OpenADR) that do not apply.
+- [Domain security](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/security/yes-energy-domain-security.yml): TLS 1.3, HSTS on both hosts, SPF and DMARC p=reject, no DNSSEC, no CAA.
+- [Well-known sweep](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/well-known/yes-energy-well-known.yml): every /.well-known/ probe, all 404.
+- [Packages](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/packages/yes-energy-packages.yml): no first-party SDK in any registry, no GitHub organization.
+- [APIs.json](https://raw.githubusercontent.com/api-evangelist/yes-energy/refs/heads/main/apis.yml)
+
+## Operations
+
+- [Status page](https://status.yesenergy.com/) — Instatus-hosted, with a machine-readable [summary.json](https://status.yesenergy.com/summary.json). This is the only unauthenticated machine-readable surface Yes Energy operates.
+- [Support](https://www.yesenergy.com/support) — phone and email; human support only, no developer resources.
+- [Pricing / packages](https://www.yesenergy.com/packages)
+- [Request a demo](https://www.yesenergy.com/demo)
+- [Privacy notice](https://www.yesenergy.com/privacy-policy)
+
+## Content
+
+- [Blog](https://www.yesenergy.com/blog) ([RSS](https://www.yesenergy.com/blog/rss.xml))
+- [News](https://www.yesenergy.com/news)
+- [About](https://www.yesenergy.com/about)
+- [LinkedIn](https://www.linkedin.com/company/yes-energy/)
+- [YouTube](https://www.youtube.com/@yes-energy)
+
+## Not applicable
+
+- No consumer energy data mandate applies. Yes Energy is a commercial wholesale market-data aggregator — not a utility, retailer, distribution network operator, metering agent, or ISO/RTO — so Green Button / ESPI, Ontario Green Button, and the Australian Consumer Data Right are all out of scope.
+- No webhooks, event stream, or AsyncAPI surface is published.
+- No MCP server, agent skill, or CLI is published.

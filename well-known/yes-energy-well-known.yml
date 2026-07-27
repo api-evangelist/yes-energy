@@ -1,0 +1,44 @@
+generated: '2026-07-27'
+method: searched
+source: live probes of the /.well-known/ surface on every Yes Energy host in apis.yml
+summary: >-
+  No /.well-known/ discovery document is served on any Yes Energy host. Every
+  RFC 9116 (security.txt), RFC 8414 (OAuth authorization server metadata), RFC
+  9728 (OAuth protected resource), OpenID Connect discovery, RFC 9727
+  (api-catalog), and ai-plugin.json probe returned HTTP 404. This is a recorded
+  negative result, not a gap in the probe — the surface genuinely does not
+  exist, which is consistent with the API's HTTP Basic auth model (no OAuth, no
+  OIDC) and with the absence of any public developer surface.
+hosts:
+- host: https://services.yesenergy.com
+  role: API host (DataSignals REST base is /PS/rest/)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.yesenergy.com
+  role: Marketing website (HubSpot CMS)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://yesenergy.com
+  role: Apex domain
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+documents_found: 0
