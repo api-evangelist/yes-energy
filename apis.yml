@@ -43,7 +43,7 @@ tags:
 - Trading
 created: '2026-07-27'
 modified: '2026-07-27'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: yes-energy:datasignals-api
   name: Yes Energy DataSignals API
