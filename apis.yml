@@ -29,6 +29,17 @@ description: >-
   the Consumer Data Right are all out of scope — and while the underlying
   ISO/RTO market data is publicly available at the source, Yes Energy itself
   publishes none of it openly.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.yesenergy.com/hubfs/Favicon.png
 tags:
 - Energy
